@@ -126,7 +126,8 @@ namespace BuildingCoder
             {
                 d = Compare(p.Y, q.Y, tolerance);
 
-                if (0 == d) d = Compare(p.Z, q.Z, tolerance);
+                if (0 == d)
+                    d = Compare(p.Z, q.Z, tolerance);
             }
 
             return d;
@@ -407,7 +408,8 @@ namespace BuildingCoder
             CurveLoop curveLoop)
         {
             var pts = new List<XYZ>();
-            foreach (var c in curveLoop) pts.AddRange(c.Tessellate());
+            foreach (var c in curveLoop)
+                pts.AddRange(c.Tessellate());
 
             var bb = new BoundingBoxXYZ();
             bb.Clear();
@@ -980,7 +982,7 @@ const T f = ( ay * bx ) - ( ax * by );
 
             var cone = GeometryCreationUtilities
                 .CreateRevolvedGeometry(frame,
-                    new[] {curveLoop},
+                    new[] { curveLoop },
                     0, 2 * Math.PI);
 
             return cone;
@@ -1023,7 +1025,7 @@ const T f = ( ay * bx ) - ( ax * by );
 
             var cone = GeometryCreationUtilities
                 .CreateRevolvedGeometry(frame,
-                    new[] {curveLoop},
+                    new[] { curveLoop },
                     0, 2 * Math.PI);
 
             return cone;
@@ -1105,7 +1107,7 @@ const T f = ( ay * bx ) - ( ax * by );
 
             return GeometryCreationUtilities
                 .CreateExtrusionGeometry(
-                    new[] {curveLoop},
+                    new[] { curveLoop },
                     XYZ.BasisZ, d3, options);
         }
 
@@ -1333,7 +1335,8 @@ const T f = ( ay * bx ) - ( ax * by );
             // Sort properties alphabetically by name 
 
             Array.Sort(ps,
-                delegate(PropertyInfo p1, PropertyInfo p2) { return p1.Name.CompareTo(p2.Name); });
+                delegate (PropertyInfo p1, PropertyInfo p2)
+                { return p1.Name.CompareTo(p2.Name); });
 
             Debug.Print("{0} properties:", ps.Length);
 
@@ -1752,7 +1755,8 @@ const T f = ( ay * bx ) - ( ax * by );
         public static string ElementDescription(
             Element e)
         {
-            if (null == e) return "<null>";
+            if (null == e)
+                return "<null>";
 
             // For a wall, the element name equals the
             // wall type name, which is equivalent to the
@@ -1906,7 +1910,8 @@ const T f = ( ay * bx ) - ( ax * by );
 
                 rc = t2.Equals(t);
 
-                if (!rc && acceptDerivedClass) rc = t2.IsSubclassOf(t);
+                if (!rc && acceptDerivedClass)
+                    rc = t2.IsSubclassOf(t);
             }
 
             return rc;
@@ -1944,15 +1949,12 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             var doc = uidoc.Document;
 
-            var ids
-                = uidoc.Selection.GetElementIds();
+            var ids = uidoc.Selection.GetElementIds();
 
             if (0 < ids.Count)
                 a.AddRange(ids
-                    .Select(
-                        id => doc.GetElement(id))
-                    .Where(
-                        e => t.IsInstanceOfType(e)));
+                    .Select(id => doc.GetElement(id))
+                    .Where(e => t.IsInstanceOfType(e)));
             else
                 a.AddRange(new FilteredElementCollector(doc)
                     .OfClass(t));
@@ -2082,7 +2084,8 @@ const T f = ( ay * bx ) - ( ax * by );
                         var symbol = doc.GetElement(id)
                             as FamilySymbol;
 
-                        if (symbol.Name == symbolName) return symbol;
+                        if (symbol.Name == symbolName)
+                            return symbol;
                     }
                 }
 
@@ -2176,7 +2179,8 @@ const T f = ( ay * bx ) - ( ax * by );
                 {
                     targetConnector = c;
 
-                    if (!hasTwoConnectors) break;
+                    if (!hasTwoConnectors)
+                        break;
                 }
                 else if (hasTwoConnectors)
                 {
@@ -2339,7 +2343,8 @@ const T f = ( ay * bx ) - ( ax * by );
                     }
                     else
                     {
-                        if (File.Exists(myString_ManifestPath)) File.Delete(myString_ManifestPath);
+                        if (File.Exists(myString_ManifestPath))
+                            File.Delete(myString_ManifestPath);
                     }
                 }
             }
@@ -2857,14 +2862,14 @@ const T f = ( ay * bx ) - ( ax * by );
 
             var met = curva.GetType().GetMethod(
                 "GetEndPoint",
-                new[] {typeof(int)});
+                new[] { typeof(int) });
 
             if (met == null)
                 met = curva.GetType().GetMethod(
                     "get_EndPoint",
-                    new[] {typeof(int)});
+                    new[] { typeof(int) });
 
-            value = met.Invoke(curva, new object[] {i})
+            value = met.Invoke(curva, new object[] { i })
                 as XYZ;
 
             return value;
@@ -2879,7 +2884,8 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             var met = fsymbol.GetType()
                 .GetMethod("Activate");
-            if (met != null) met.Invoke(fsymbol, null);
+            if (met != null)
+                met.Invoke(fsymbol, null);
         }
 
         #endregion // Autodesk.Revit.DB.FamilySymbol
@@ -2898,7 +2904,8 @@ const T f = ( ay * bx ) - ( ax * by );
                 .GetType()).ToArray();
             var met = def.GetType()
                 .GetMethod("SetAllowVaryBetweenGroups", tipos);
-            if (met != null) met.Invoke(def, parametros);
+            if (met != null)
+                met.Invoke(def, parametros);
         }
 
         #endregion // Autodesk.Revit.DB.InternalDefinition
@@ -3016,12 +3023,12 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             Element value = null;
             var met = doc.GetType()
-                .GetMethod("get_Element", new[] {typeof(ElementId)});
+                .GetMethod("get_Element", new[] { typeof(ElementId) });
             if (met == null)
                 met = doc.GetType()
-                    .GetMethod("GetElement", new[] {typeof(ElementId)});
+                    .GetMethod("GetElement", new[] { typeof(ElementId) });
             value = met.Invoke(doc,
-                new object[] {id}) as Element;
+                new object[] { id }) as Element;
             return value;
         }
 
@@ -3296,22 +3303,23 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             Group value = null;
             var eleset = new ElementSet();
-            foreach (var ele in elementos) eleset.Insert(ele);
+            foreach (var ele in elementos)
+                eleset.Insert(ele);
             ICollection<ElementId> col = elementos
                 .Select(a => a.Id).ToList();
             object obj = doc.Create;
             var met = obj.GetType()
-                .GetMethod("NewGroup", new[] {col.GetType()});
+                .GetMethod("NewGroup", new[] { col.GetType() });
             if (met != null)
             {
-                met.Invoke(obj, new object[] {col});
+                met.Invoke(obj, new object[] { col });
             }
             else
             {
                 met = obj.GetType()
-                    .GetMethod("NewGroup", new[] {eleset.GetType()});
+                    .GetMethod("NewGroup", new[] { eleset.GetType() });
                 met.Invoke(obj,
-                    new object[] {eleset});
+                    new object[] { eleset });
             }
 
             return value;
@@ -3323,18 +3331,18 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             object obj = doc;
             var m = obj.GetType().GetMethod(
-                "Delete", new[] {typeof(Element)});
+                "Delete", new[] { typeof(Element) });
 
             if (m != null)
             {
-                m.Invoke(obj, new object[] {e});
+                m.Invoke(obj, new object[] { e });
             }
             else
             {
                 m = obj.GetType().GetMethod(
-                    "Delete", new[] {typeof(ElementId)});
+                    "Delete", new[] { typeof(ElementId) });
 
-                m.Invoke(obj, new object[] {e.Id});
+                m.Invoke(obj, new object[] { e.Id });
             }
         }
 
@@ -3371,9 +3379,9 @@ const T f = ( ay * bx ) - ( ax * by );
             else
             {
                 var met = t
-                    .GetMethod("GetMaterialIds", new[] {typeof(bool)});
+                    .GetMethod("GetMaterialIds", new[] { typeof(bool) });
                 value = ((ICollection<ElementId>) met
-                        .Invoke(ele, new object[] {false}))
+                        .Invoke(ele, new object[] { false }))
                     .Select(a => doc.GetElement2(a)).Cast<Material>().ToList();
             }
 
@@ -3386,12 +3394,12 @@ const T f = ( ay * bx ) - ( ax * by );
             Parameter value = null;
             var t = ele.GetType();
             var met = t
-                .GetMethod("LookupParameter", new[] {typeof(string)});
+                .GetMethod("LookupParameter", new[] { typeof(string) });
             if (met == null)
                 met = t.GetMethod("get_Parameter",
-                    new[] {typeof(string)});
+                    new[] { typeof(string) });
             value = met.Invoke(ele,
-                new object[] {nome_paramentro}) as Parameter;
+                new object[] { nome_paramentro }) as Parameter;
             if (value == null)
             {
                 var pas = ele.Parameters
@@ -3413,12 +3421,12 @@ const T f = ( ay * bx ) - ( ax * by );
             Parameter value = null;
             var t = ele.GetType();
             var met = t
-                .GetMethod("LookupParameter", new[] {typeof(BuiltInParameter)});
+                .GetMethod("LookupParameter", new[] { typeof(BuiltInParameter) });
             if (met == null)
                 met = t.GetMethod("get_Parameter",
-                    new[] {typeof(BuiltInParameter)});
+                    new[] { typeof(BuiltInParameter) });
             value = met.Invoke(ele,
-                new object[] {builtInParameter}) as Parameter;
+                new object[] { builtInParameter }) as Parameter;
             return value;
         }
 
@@ -3436,14 +3444,14 @@ const T f = ( ay * bx ) - ( ax * by );
             if (met != null)
             {
                 value = (double) met.Invoke(ele,
-                    new object[] {m.Id, false});
+                    new object[] { m.Id, false });
             }
             else
             {
                 met = t.GetMethod("GetMaterialArea",
-                    new[] {typeof(Element)});
+                    new[] { typeof(Element) });
                 value = (double) met.Invoke(ele,
-                    new object[] {m});
+                    new object[] { m });
             }
 
             return value;
@@ -3463,14 +3471,14 @@ const T f = ( ay * bx ) - ( ax * by );
             if (met != null)
             {
                 value = (double) met.Invoke(ele,
-                    new object[] {m.Id, false});
+                    new object[] { m.Id, false });
             }
             else
             {
                 met = t
-                    .GetMethod("GetMaterialVolume", new[] {typeof(ElementId)});
+                    .GetMethod("GetMaterialVolume", new[] { typeof(ElementId) });
                 value = (double) met.Invoke(ele,
-                    new object[] {m.Id});
+                    new object[] { m.Id });
             }
 
             return value;
@@ -3489,13 +3497,15 @@ const T f = ( ay * bx ) - ( ax * by );
             {
                 obj = prop.GetValue(obj, null);
                 var arr = obj as IEnumerable;
-                foreach (GeometryObject geo in arr) value.Add(geo);
+                foreach (GeometryObject geo in arr)
+                    value.Add(geo);
             }
             else
             {
                 var geos =
                     obj as IEnumerable<GeometryObject>;
-                foreach (var geo in geos) value.Add(geo);
+                foreach (var geo in geos)
+                    value.Add(geo);
             }
 
             return value;
@@ -3595,8 +3605,8 @@ const T f = ( ay * bx ) - ( ax * by );
                 ICollection<ElementId> ids
                     = new List<ElementId>();
                 var met = sel.GetType().GetMethod(
-                    "SetElementIds", new[] {ids.GetType()});
-                met.Invoke(sel, new object[] {ids});
+                    "SetElementIds", new[] { ids.GetType() });
+                met.Invoke(sel, new object[] { ids });
             }
         }
 
@@ -3617,10 +3627,10 @@ const T f = ( ay * bx ) - ( ax * by );
                 var t = ls[0];
                 object obj = view;
                 var met = view.GetType().GetMethod(
-                    "Duplicate", new[] {t});
+                    "Duplicate", new[] { t });
                 if (met != null)
                     value = met.Invoke(obj,
-                        new object[] {2}) as ElementId;
+                        new object[] { 2 }) as ElementId;
             }
 
             return value;
@@ -3647,12 +3657,12 @@ const T f = ( ay * bx ) - ( ax * by );
                 var obj = construtor.Invoke(new object[] { });
                 var met = obj.GetType()
                     .GetMethod("SetProjectionLineColor",
-                        new[] {cor.GetType()});
-                met.Invoke(obj, new object[] {cor});
+                        new[] { cor.GetType() });
+                met.Invoke(obj, new object[] { cor });
                 met = obj.GetType()
                     .GetMethod("SetProjectionLineWeight",
-                        new[] {espessura.GetType()});
-                met.Invoke(obj, new object[] {espessura});
+                        new[] { espessura.GetType() });
+                met.Invoke(obj, new object[] { espessura });
                 met = view.GetType()
                     .GetMethod("SetElementOverrides",
                         new[]
@@ -3660,7 +3670,8 @@ const T f = ( ay * bx ) - ( ax * by );
                             typeof(ElementId),
                             obj.GetType()
                         });
-                foreach (var id in ids) met.Invoke(view, new[] {id, obj});
+                foreach (var id in ids)
+                    met.Invoke(view, new[] { id, obj });
             }
             else
             {
@@ -3671,7 +3682,7 @@ const T f = ( ay * bx ) - ( ax * by );
                             typeof(ICollection<ElementId>),
                             typeof(Autodesk.Revit.DB.Color)
                         });
-                met.Invoke(view, new object[] {ids, cor});
+                met.Invoke(view, new object[] { ids, cor });
                 met = view.GetType()
                     .GetMethod("set_ProjLineWeightOverrideByElement",
                         new[]
@@ -3679,7 +3690,7 @@ const T f = ( ay * bx ) - ( ax * by );
                             typeof(ICollection<ElementId>),
                             typeof(int)
                         });
-                met.Invoke(view, new object[] {ids, espessura});
+                met.Invoke(view, new object[] { ids, espessura });
             }
         }
 
@@ -3705,7 +3716,8 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             var prop = view.GetType()
                 .GetProperty("ViewTemplateId");
-            if (prop != null) prop.SetValue(view, id, null);
+            if (prop != null)
+                prop.SetValue(view, id, null);
         }
 
         #endregion // Autodesk.Revit.DB.Viewplan
