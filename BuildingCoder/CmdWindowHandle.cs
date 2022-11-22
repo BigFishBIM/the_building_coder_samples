@@ -46,7 +46,7 @@ namespace BuildingCoder
     internal class CmdWindowHandle : IExternalCommand
     {
         private const string _prompt
-            = "Please select some elements.";
+            = "请先选择物体。";
 
         private static WindowHandle _hWndRevit;
 
@@ -66,8 +66,7 @@ namespace BuildingCoder
                 //  _hWndRevit = new WindowHandle( h );
                 //}
 
-                var process
-                    = Process.GetCurrentProcess();
+                var process = Process.GetCurrentProcess();
 
                 var h = process.MainWindowHandle;
                 _hWndRevit = new WindowHandle(h);
@@ -79,8 +78,7 @@ namespace BuildingCoder
 
             var sel = uidoc.Selection;
 
-            using var f
-                = new CmdWindowHandleForm();
+            using var f = new CmdWindowHandleForm();
             f.Show(_hWndRevit);
             var go = true;
             while (go)
@@ -90,7 +88,7 @@ namespace BuildingCoder
                 var ids = sel.GetElementIds(); // 2015
                 var n = ids.Count;
 
-                var s = $"{n} element{Util.PluralSuffix(n)} selected{(0 == n ? $";\n{_prompt}" : ":")}";
+                var s = $"已选择{n}个物体 {(0 == n ? $";\n{_prompt}" : ":")}";
 
                 foreach (var id in ids)
                 {
@@ -127,8 +125,7 @@ namespace BuildingCoder
         {
             if (null == _hWndRevit)
             {
-                var process
-                    = Process.GetCurrentProcess();
+                var process = Process.GetCurrentProcess();
 
                 var h = process.MainWindowHandle;
                 _hWndRevit = new WindowHandle(h);
