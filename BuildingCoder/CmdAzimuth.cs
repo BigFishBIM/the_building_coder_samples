@@ -37,8 +37,7 @@ namespace BuildingCoder
             var uidoc = app.ActiveUIDocument;
             var doc = uidoc.Document;
 
-            var e = Util.SelectSingleElement(
-                uidoc, "a line or wall");
+            var e = Util.SelectSingleElement(uidoc, "a line or wall");
 
             LocationCurve curve = null;
 
