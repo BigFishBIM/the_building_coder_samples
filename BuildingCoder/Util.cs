@@ -126,8 +126,7 @@ namespace BuildingCoder
             {
                 d = Compare(p.Y, q.Y, tolerance);
 
-                if (0 == d)
-                    d = Compare(p.Z, q.Z, tolerance);
+                if (0 == d) d = Compare(p.Z, q.Z, tolerance);
             }
 
             return d;
@@ -198,7 +197,7 @@ namespace BuildingCoder
         }
 
         /// <summary>
-        ///     Predicate to test whewther two points or
+        ///     Predicate to test whether two points or
         ///     vectors can be considered equal with the
         ///     given tolerance.
         /// </summary>
@@ -237,6 +236,10 @@ namespace BuildingCoder
             // c * c < _eps * a * b
         }
 
+        /// <summary>
+        ///     Return true if the vectors p and Q are parallel, 
+        ///     or at least one of them is zero length.
+        /// </summary>
         public static bool IsParallel(XYZ p, XYZ q)
         {
             return p.CrossProduct(q).IsZeroLength();
@@ -408,8 +411,7 @@ namespace BuildingCoder
             CurveLoop curveLoop)
         {
             var pts = new List<XYZ>();
-            foreach (var c in curveLoop)
-                pts.AddRange(c.Tessellate());
+            foreach (var c in curveLoop) pts.AddRange(c.Tessellate());
 
             var bb = new BoundingBoxXYZ();
             bb.Clear();
@@ -982,7 +984,7 @@ const T f = ( ay * bx ) - ( ax * by );
 
             var cone = GeometryCreationUtilities
                 .CreateRevolvedGeometry(frame,
-                    new[] { curveLoop },
+                    new[] {curveLoop},
                     0, 2 * Math.PI);
 
             return cone;
@@ -1025,7 +1027,7 @@ const T f = ( ay * bx ) - ( ax * by );
 
             var cone = GeometryCreationUtilities
                 .CreateRevolvedGeometry(frame,
-                    new[] { curveLoop },
+                    new[] {curveLoop},
                     0, 2 * Math.PI);
 
             return cone;
@@ -1107,7 +1109,7 @@ const T f = ( ay * bx ) - ( ax * by );
 
             return GeometryCreationUtilities
                 .CreateExtrusionGeometry(
-                    new[] { curveLoop },
+                    new[] {curveLoop},
                     XYZ.BasisZ, d3, options);
         }
 
@@ -1335,8 +1337,7 @@ const T f = ( ay * bx ) - ( ax * by );
             // Sort properties alphabetically by name 
 
             Array.Sort(ps,
-                delegate (PropertyInfo p1, PropertyInfo p2)
-                { return p1.Name.CompareTo(p2.Name); });
+                delegate(PropertyInfo p1, PropertyInfo p2) { return p1.Name.CompareTo(p2.Name); });
 
             Debug.Print("{0} properties:", ps.Length);
 
@@ -1466,19 +1467,20 @@ const T f = ( ay * bx ) - ( ax * by );
         ///     Return a string representation in degrees
         ///     for an angle given in radians.
         /// </summary>
-        public static string AngleString(double angle)
+        public static string AngleString(double angle, bool addUnits = true)
         {
-            return $"{RealString(angle * 180 / Math.PI)} degrees";
+            string sunits = addUnits ? " degrees" : string.Empty;
+            return $"{RealString(angle * 180 / Math.PI)}" + sunits;
         }
 
         /// <summary>
         ///     Return a string for a length in millimetres
         ///     formatted as an integer value.
         /// </summary>
-        public static string MmString(double length)
+        public static string MmString(double length, bool addUnits = true)
         {
-            //return RealString( FootToMm( length ) ) + " mm";
-            return $"{Math.Round(FootToMm(length))} mm";
+            string sunits = addUnits ? " mm" : string.Empty;
+            return $"{Math.Round(FootToMm(length))}" + sunits;
         }
 
         /// <summary>
@@ -1736,6 +1738,17 @@ const T f = ( ay * bx ) - ( ax * by );
             d.Show();
         }
 
+        public static void InfoMsg3(
+            string instruction,
+            IList<string> content)
+        {
+            Debug.WriteLine($"{instruction}\r\n{content}");
+            var d = new TaskDialog(_caption);
+            d.MainInstruction = instruction;
+            d.MainContent = string.Join("\r\n",content);
+            d.Show();
+        }
+
         public static void ErrorMsg(string msg)
         {
             Debug.WriteLine(msg);
@@ -1755,8 +1768,7 @@ const T f = ( ay * bx ) - ( ax * by );
         public static string ElementDescription(
             Element e)
         {
-            if (null == e)
-                return "<null>";
+            if (null == e) return "<null>";
 
             // For a wall, the element name equals the
             // wall type name, which is equivalent to the
@@ -1819,6 +1831,10 @@ const T f = ( ay * bx ) - ( ax * by );
                     rc = true;
                 }
             }
+
+            // Todo: if thew Location property is null,
+            // try using the BuondingBox. If that is null
+            // or empty, try to retrieve geometry vertices
 
             return rc;
         }
@@ -1910,8 +1926,7 @@ const T f = ( ay * bx ) - ( ax * by );
 
                 rc = t2.Equals(t);
 
-                if (!rc && acceptDerivedClass)
-                    rc = t2.IsSubclassOf(t);
+                if (!rc && acceptDerivedClass) rc = t2.IsSubclassOf(t);
             }
 
             return rc;
@@ -1949,12 +1964,15 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             var doc = uidoc.Document;
 
-            var ids = uidoc.Selection.GetElementIds();
+            var ids
+                = uidoc.Selection.GetElementIds();
 
             if (0 < ids.Count)
                 a.AddRange(ids
-                    .Select(id => doc.GetElement(id))
-                    .Where(e => t.IsInstanceOfType(e)));
+                    .Select(
+                        id => doc.GetElement(id))
+                    .Where(
+                        e => t.IsInstanceOfType(e)));
             else
                 a.AddRange(new FilteredElementCollector(doc)
                     .OfClass(t));
@@ -2084,8 +2102,7 @@ const T f = ( ay * bx ) - ( ax * by );
                         var symbol = doc.GetElement(id)
                             as FamilySymbol;
 
-                        if (symbol.Name == symbolName)
-                            return symbol;
+                        if (symbol.Name == symbolName) return symbol;
                     }
                 }
 
@@ -2128,6 +2145,102 @@ const T f = ( ay * bx ) - ( ax * by );
         }
 
         #endregion // Element Filtering
+
+        #region Default Workset Names
+        // Shared by Julian Wandzilak in the Revit API discussion thread
+        // https://forums.autodesk.com/t5/revit-api-forum/doc-enableworksharing-amp-language-versions/m-p/11845252#M70159
+        /// <summary>
+        /// Return default workset names 
+        /// for all languages supported by Revit
+        /// </summary>
+        /// <param name="sLanguage">`app.Language.ToString()`</param>
+        /// <returns>`false` if no valid language input argument provided, else `true`</returns>
+        bool GetDefaultWorksetNames(
+            string sLanguage, 
+            out string wsnLevelsAndGrids, 
+            out string wsnWorkset1 )
+        {
+            wsnLevelsAndGrids = string.Empty;
+            wsnWorkset1 = string.Empty;
+
+            switch (sLanguage)
+            {
+                case "Unknown":
+                    wsnLevelsAndGrids = "Shared Levels and Grids";
+                    wsnWorkset1 = "Workset1";
+                    break;
+                case "English_USA":
+                    wsnLevelsAndGrids = "Shared Levels and Grids";
+                    wsnWorkset1 = "Workset1";
+                    break;
+                case "German":
+                    wsnLevelsAndGrids = "Gemeinsam genutzte Ebenen und Raster";
+                    wsnWorkset1 = "Bearbeitungsbereich1";
+                    break;
+                case "Spanish":
+                    wsnLevelsAndGrids = "Niveles y rejillas compartidos";
+                    wsnWorkset1 = "Subproyecto1";
+                    break;
+                case "French":
+                    wsnLevelsAndGrids = "Quadrillages et niveaux partagés";
+                    wsnWorkset1 = "Sous-projet 1";
+                    break;
+                case "Italian":
+                    wsnLevelsAndGrids = "Griglie e livelli condivisi";
+                    wsnWorkset1 = "Workset1";
+                    break;
+                //case "Dutch":
+                //  wsnLevelsAndGrids = "Shared Levels and Grids";
+                //  wsnWorkset1 = "Workset1";
+                //  break;
+                case "Chinese_Simplified":
+                    wsnLevelsAndGrids = "共享标高和轴网";
+                    wsnWorkset1 = "工作集1";
+                    break;
+                case "Chinese_Traditional":
+                    wsnLevelsAndGrids = "共用的樓層和網格";
+                    wsnWorkset1 = "工作集 1";
+                    break;
+                case "Japanese":
+                    wsnLevelsAndGrids = "共有レベルと通芯";
+                    wsnWorkset1 = "ワークセット1";
+                    break;
+                case "Korean":
+                    wsnLevelsAndGrids = "공유 레벨 및 그리드";
+                    wsnWorkset1 = "작업세트1";
+                    break;
+                case "Russian":
+                    wsnLevelsAndGrids = "Общие уровни и сетки";
+                    wsnWorkset1 = "Рабочий набор 1";
+                    break;
+                case "Czech":
+                    wsnLevelsAndGrids = "Sdílená podlaží a osnovy";
+                    wsnWorkset1 = "Pracovní sada1";
+                    break;
+                case "Polish":
+                    wsnLevelsAndGrids = "Współdzielone poziomy i osie";
+                    wsnWorkset1 = "Zadanie1";
+                    break;
+                //case "Hungarian":
+                //  wsnLevelsAndGrids = "Shared Levels and Grids";
+                //  wsnWorkset1 = "Workset1";
+                //  break;
+                case "Brazilian_Portuguese":
+                    wsnLevelsAndGrids = "Níveis e eixos compartilhados";
+                    wsnWorkset1 = "Workset1";
+                    break;
+                case "English_GB":
+                    wsnLevelsAndGrids = "Shared Levels and Grids";
+                    wsnWorkset1 = "Workset1";
+                    break;
+                default:
+                    wsnLevelsAndGrids = "Shared Levels and Grids";
+                    wsnWorkset1 = "Workset1";
+                    break;
+            }
+            return 0 < wsnLevelsAndGrids.Length;
+        }
+        #endregion // Default Workset Names
 
         #region MEP utilities
 
@@ -2179,8 +2292,7 @@ const T f = ( ay * bx ) - ( ax * by );
                 {
                     targetConnector = c;
 
-                    if (!hasTwoConnectors)
-                        break;
+                    if (!hasTwoConnectors) break;
                 }
                 else if (hasTwoConnectors)
                 {
@@ -2312,18 +2424,18 @@ const T f = ( ay * bx ) - ( ax * by );
             if (!exists)
                 Directory.CreateDirectory(sDir);
 
-            var XElementAddIn = new XElement("AddIn",
+            var xElementAddIn = new XElement("AddIn",
                 new XAttribute("Type", "Application"));
 
-            XElementAddIn.Add(new XElement("Name", dll_name));
-            XElementAddIn.Add(new XElement("Assembly", $"{dll_folder}{dll_name}.dll"));
-            XElementAddIn.Add(new XElement("AddInId", Guid.NewGuid().ToString()));
-            XElementAddIn.Add(new XElement("FullClassName", $"{dll_name}.SettingUpRibbon"));
-            XElementAddIn.Add(new XElement("VendorId", "01"));
-            XElementAddIn.Add(new XElement("VendorDescription", "Joshua Lumley Secrets, twitter @joshnewzealand"));
+            xElementAddIn.Add(new XElement("Name", dll_name));
+            xElementAddIn.Add(new XElement("Assembly", $"{dll_folder}{dll_name}.dll"));
+            xElementAddIn.Add(new XElement("AddInId", Guid.NewGuid().ToString()));
+            xElementAddIn.Add(new XElement("FullClassName", $"{dll_name}.SettingUpRibbon"));
+            xElementAddIn.Add(new XElement("VendorId", "01"));
+            xElementAddIn.Add(new XElement("VendorDescription", "Joshua Lumley Secrets, twitter @joshnewzealand"));
 
-            var XElementRevitAddIns = new XElement("RevitAddIns");
-            XElementRevitAddIns.Add(XElementAddIn);
+            var xElementRevitAddIns = new XElement("RevitAddIns");
+            xElementRevitAddIns.Add(xElementAddIn);
 
             foreach (var d in Directory.GetDirectories(sDir))
             {
@@ -2338,13 +2450,12 @@ const T f = ( ay * bx ) - ( ax * by );
 
                     if (myInt_FromTextBox >= 2017)
                     {
-                        new XDocument(XElementRevitAddIns).Save(
+                        new XDocument(xElementRevitAddIns).Save(
                             myString_ManifestPath);
                     }
                     else
                     {
-                        if (File.Exists(myString_ManifestPath))
-                            File.Delete(myString_ManifestPath);
+                        if (File.Exists(myString_ManifestPath)) File.Delete(myString_ManifestPath);
                     }
                 }
             }
@@ -2417,17 +2528,17 @@ const T f = ( ay * bx ) - ( ax * by );
     {
         // (C) Jonathan Skeet
         // from https://github.com/morelinq/MoreLINQ/blob/master/MoreLinq/MinBy.cs
-        public static tsource MinBy<tsource, tkey>(
-            this IEnumerable<tsource> source,
-            Func<tsource, tkey> selector)
+        public static TSource MinBy<TSource, TKey>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> selector)
         {
-            return source.MinBy(selector, Comparer<tkey>.Default);
+            return source.MinBy(selector, Comparer<TKey>.Default);
         }
 
-        public static tsource MinBy<tsource, tkey>(
-            this IEnumerable<tsource> source,
-            Func<tsource, tkey> selector,
-            IComparer<tkey> comparer)
+        public static TSource MinBy<TSource, TKey>(
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> selector,
+            IComparer<TKey> comparer)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -2862,14 +2973,14 @@ const T f = ( ay * bx ) - ( ax * by );
 
             var met = curva.GetType().GetMethod(
                 "GetEndPoint",
-                new[] { typeof(int) });
+                new[] {typeof(int)});
 
             if (met == null)
                 met = curva.GetType().GetMethod(
                     "get_EndPoint",
-                    new[] { typeof(int) });
+                    new[] {typeof(int)});
 
-            value = met.Invoke(curva, new object[] { i })
+            value = met.Invoke(curva, new object[] {i})
                 as XYZ;
 
             return value;
@@ -2884,8 +2995,7 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             var met = fsymbol.GetType()
                 .GetMethod("Activate");
-            if (met != null)
-                met.Invoke(fsymbol, null);
+            if (met != null) met.Invoke(fsymbol, null);
         }
 
         #endregion // Autodesk.Revit.DB.FamilySymbol
@@ -2904,8 +3014,7 @@ const T f = ( ay * bx ) - ( ax * by );
                 .GetType()).ToArray();
             var met = def.GetType()
                 .GetMethod("SetAllowVaryBetweenGroups", tipos);
-            if (met != null)
-                met.Invoke(def, parametros);
+            if (met != null) met.Invoke(def, parametros);
         }
 
         #endregion // Autodesk.Revit.DB.InternalDefinition
@@ -3023,12 +3132,12 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             Element value = null;
             var met = doc.GetType()
-                .GetMethod("get_Element", new[] { typeof(ElementId) });
+                .GetMethod("get_Element", new[] {typeof(ElementId)});
             if (met == null)
                 met = doc.GetType()
-                    .GetMethod("GetElement", new[] { typeof(ElementId) });
+                    .GetMethod("GetElement", new[] {typeof(ElementId)});
             value = met.Invoke(doc,
-                new object[] { id }) as Element;
+                new object[] {id}) as Element;
             return value;
         }
 
@@ -3303,23 +3412,22 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             Group value = null;
             var eleset = new ElementSet();
-            foreach (var ele in elementos)
-                eleset.Insert(ele);
+            foreach (var ele in elementos) eleset.Insert(ele);
             ICollection<ElementId> col = elementos
                 .Select(a => a.Id).ToList();
             object obj = doc.Create;
             var met = obj.GetType()
-                .GetMethod("NewGroup", new[] { col.GetType() });
+                .GetMethod("NewGroup", new[] {col.GetType()});
             if (met != null)
             {
-                met.Invoke(obj, new object[] { col });
+                met.Invoke(obj, new object[] {col});
             }
             else
             {
                 met = obj.GetType()
-                    .GetMethod("NewGroup", new[] { eleset.GetType() });
+                    .GetMethod("NewGroup", new[] {eleset.GetType()});
                 met.Invoke(obj,
-                    new object[] { eleset });
+                    new object[] {eleset});
             }
 
             return value;
@@ -3331,18 +3439,18 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             object obj = doc;
             var m = obj.GetType().GetMethod(
-                "Delete", new[] { typeof(Element) });
+                "Delete", new[] {typeof(Element)});
 
             if (m != null)
             {
-                m.Invoke(obj, new object[] { e });
+                m.Invoke(obj, new object[] {e});
             }
             else
             {
                 m = obj.GetType().GetMethod(
-                    "Delete", new[] { typeof(ElementId) });
+                    "Delete", new[] {typeof(ElementId)});
 
-                m.Invoke(obj, new object[] { e.Id });
+                m.Invoke(obj, new object[] {e.Id});
             }
         }
 
@@ -3379,9 +3487,9 @@ const T f = ( ay * bx ) - ( ax * by );
             else
             {
                 var met = t
-                    .GetMethod("GetMaterialIds", new[] { typeof(bool) });
+                    .GetMethod("GetMaterialIds", new[] {typeof(bool)});
                 value = ((ICollection<ElementId>) met
-                        .Invoke(ele, new object[] { false }))
+                        .Invoke(ele, new object[] {false}))
                     .Select(a => doc.GetElement2(a)).Cast<Material>().ToList();
             }
 
@@ -3394,12 +3502,12 @@ const T f = ( ay * bx ) - ( ax * by );
             Parameter value = null;
             var t = ele.GetType();
             var met = t
-                .GetMethod("LookupParameter", new[] { typeof(string) });
+                .GetMethod("LookupParameter", new[] {typeof(string)});
             if (met == null)
                 met = t.GetMethod("get_Parameter",
-                    new[] { typeof(string) });
+                    new[] {typeof(string)});
             value = met.Invoke(ele,
-                new object[] { nome_paramentro }) as Parameter;
+                new object[] {nome_paramentro}) as Parameter;
             if (value == null)
             {
                 var pas = ele.Parameters
@@ -3421,12 +3529,12 @@ const T f = ( ay * bx ) - ( ax * by );
             Parameter value = null;
             var t = ele.GetType();
             var met = t
-                .GetMethod("LookupParameter", new[] { typeof(BuiltInParameter) });
+                .GetMethod("LookupParameter", new[] {typeof(BuiltInParameter)});
             if (met == null)
                 met = t.GetMethod("get_Parameter",
-                    new[] { typeof(BuiltInParameter) });
+                    new[] {typeof(BuiltInParameter)});
             value = met.Invoke(ele,
-                new object[] { builtInParameter }) as Parameter;
+                new object[] {builtInParameter}) as Parameter;
             return value;
         }
 
@@ -3444,14 +3552,14 @@ const T f = ( ay * bx ) - ( ax * by );
             if (met != null)
             {
                 value = (double) met.Invoke(ele,
-                    new object[] { m.Id, false });
+                    new object[] {m.Id, false});
             }
             else
             {
                 met = t.GetMethod("GetMaterialArea",
-                    new[] { typeof(Element) });
+                    new[] {typeof(Element)});
                 value = (double) met.Invoke(ele,
-                    new object[] { m });
+                    new object[] {m});
             }
 
             return value;
@@ -3471,14 +3579,14 @@ const T f = ( ay * bx ) - ( ax * by );
             if (met != null)
             {
                 value = (double) met.Invoke(ele,
-                    new object[] { m.Id, false });
+                    new object[] {m.Id, false});
             }
             else
             {
                 met = t
-                    .GetMethod("GetMaterialVolume", new[] { typeof(ElementId) });
+                    .GetMethod("GetMaterialVolume", new[] {typeof(ElementId)});
                 value = (double) met.Invoke(ele,
-                    new object[] { m.Id });
+                    new object[] {m.Id});
             }
 
             return value;
@@ -3497,15 +3605,13 @@ const T f = ( ay * bx ) - ( ax * by );
             {
                 obj = prop.GetValue(obj, null);
                 var arr = obj as IEnumerable;
-                foreach (GeometryObject geo in arr)
-                    value.Add(geo);
+                foreach (GeometryObject geo in arr) value.Add(geo);
             }
             else
             {
                 var geos =
                     obj as IEnumerable<GeometryObject>;
-                foreach (var geo in geos)
-                    value.Add(geo);
+                foreach (var geo in geos) value.Add(geo);
             }
 
             return value;
@@ -3605,8 +3711,8 @@ const T f = ( ay * bx ) - ( ax * by );
                 ICollection<ElementId> ids
                     = new List<ElementId>();
                 var met = sel.GetType().GetMethod(
-                    "SetElementIds", new[] { ids.GetType() });
-                met.Invoke(sel, new object[] { ids });
+                    "SetElementIds", new[] {ids.GetType()});
+                met.Invoke(sel, new object[] {ids});
             }
         }
 
@@ -3627,10 +3733,10 @@ const T f = ( ay * bx ) - ( ax * by );
                 var t = ls[0];
                 object obj = view;
                 var met = view.GetType().GetMethod(
-                    "Duplicate", new[] { t });
+                    "Duplicate", new[] {t});
                 if (met != null)
                     value = met.Invoke(obj,
-                        new object[] { 2 }) as ElementId;
+                        new object[] {2}) as ElementId;
             }
 
             return value;
@@ -3657,12 +3763,12 @@ const T f = ( ay * bx ) - ( ax * by );
                 var obj = construtor.Invoke(new object[] { });
                 var met = obj.GetType()
                     .GetMethod("SetProjectionLineColor",
-                        new[] { cor.GetType() });
-                met.Invoke(obj, new object[] { cor });
+                        new[] {cor.GetType()});
+                met.Invoke(obj, new object[] {cor});
                 met = obj.GetType()
                     .GetMethod("SetProjectionLineWeight",
-                        new[] { espessura.GetType() });
-                met.Invoke(obj, new object[] { espessura });
+                        new[] {espessura.GetType()});
+                met.Invoke(obj, new object[] {espessura});
                 met = view.GetType()
                     .GetMethod("SetElementOverrides",
                         new[]
@@ -3670,8 +3776,7 @@ const T f = ( ay * bx ) - ( ax * by );
                             typeof(ElementId),
                             obj.GetType()
                         });
-                foreach (var id in ids)
-                    met.Invoke(view, new[] { id, obj });
+                foreach (var id in ids) met.Invoke(view, new[] {id, obj});
             }
             else
             {
@@ -3682,7 +3787,7 @@ const T f = ( ay * bx ) - ( ax * by );
                             typeof(ICollection<ElementId>),
                             typeof(Autodesk.Revit.DB.Color)
                         });
-                met.Invoke(view, new object[] { ids, cor });
+                met.Invoke(view, new object[] {ids, cor});
                 met = view.GetType()
                     .GetMethod("set_ProjLineWeightOverrideByElement",
                         new[]
@@ -3690,7 +3795,7 @@ const T f = ( ay * bx ) - ( ax * by );
                             typeof(ICollection<ElementId>),
                             typeof(int)
                         });
-                met.Invoke(view, new object[] { ids, espessura });
+                met.Invoke(view, new object[] {ids, espessura});
             }
         }
 
@@ -3716,8 +3821,7 @@ const T f = ( ay * bx ) - ( ax * by );
         {
             var prop = view.GetType()
                 .GetProperty("ViewTemplateId");
-            if (prop != null)
-                prop.SetValue(view, id, null);
+            if (prop != null) prop.SetValue(view, id, null);
         }
 
         #endregion // Autodesk.Revit.DB.Viewplan

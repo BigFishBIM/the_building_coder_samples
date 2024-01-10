@@ -337,7 +337,7 @@ namespace BuildingCoder
             List<XYZ> loop)
         {
             var p1 = XYZ.Zero;
-            var p2 = XYZ.Zero;
+            var q = XYZ.Zero;
             var first = true;
             foreach (var p in loop)
             {
@@ -348,13 +348,13 @@ namespace BuildingCoder
                 }
                 else
                 {
-                    CreateModelLine(_doc, p, p2);
+                    CreateModelLine(_doc, p, q);
                 }
 
-                p2 = p;
+                q = p;
             }
 
-            CreateModelLine(_doc, p2, p1);
+            CreateModelLine(_doc, q, p1);
         }
 
         public void DrawPolygons(

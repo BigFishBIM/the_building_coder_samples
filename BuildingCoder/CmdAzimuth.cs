@@ -14,6 +14,7 @@
 
 #region Namespaces
 
+using System.Collections.Generic;
 using System.Diagnostics;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
@@ -25,7 +26,7 @@ namespace BuildingCoder
 {
     [Transaction(TransactionMode.ReadOnly)]
     internal class CmdAzimuth : IExternalCommand
-    {
+    {     
         public Result Execute(
             ExternalCommandData commandData,
             ref string message,
@@ -37,7 +38,8 @@ namespace BuildingCoder
             var uidoc = app.ActiveUIDocument;
             var doc = uidoc.Document;
 
-            var e = Util.SelectSingleElement(uidoc, "a line or wall");
+            var e = Util.SelectSingleElement(
+                uidoc, "a line or wall");
 
             LocationCurve curve = null;
 

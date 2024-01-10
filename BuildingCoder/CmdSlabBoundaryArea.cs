@@ -65,8 +65,7 @@ namespace BuildingCoder
             foreach (var polygon in flat_polygons)
             {
                 a = GetSignedPolygonArea(polygon);
-                if (Math.Abs(maxArea) < Math.Abs(a))
-                    maxArea = a;
+                if (Math.Abs(maxArea) < Math.Abs(a)) maxArea = a;
                 areas[i++] = a;
             }
 
@@ -107,8 +106,7 @@ namespace BuildingCoder
         {
             var n = p.Count;
             var sum = p[0].U * (p[1].V - p[n - 1].V); // loop at beginning
-            for (var i = 1; i < n - 1; ++i)
-                sum += p[i].U * (p[i + 1].V - p[i - 1].V);
+            for (var i = 1; i < n - 1; ++i) sum += p[i].U * (p[i + 1].V - p[i - 1].V);
             sum += p[n - 1].U * (p[0].V - p[n - 2].V); // loop at end
             return 0.5 * sum;
         }
@@ -231,8 +229,8 @@ namespace BuildingCoder
                         F.Origin + F.XVector, F.Origin + F.YVector));
 
                 foreach (var Crv in OuterLoops)
-                    foreach (var C in Crv)
-                        IntDoc.Create.NewModelCurve(C, SKP);
+                foreach (var C in Crv)
+                    IntDoc.Create.NewModelCurve(C, SKP);
                 Tx.Commit();
             }
 
@@ -262,17 +260,17 @@ namespace BuildingCoder
         // In Revit API discussion forum thread
         // https://forums.autodesk.com/t5/revit-api-forum/is-the-first-edgeloop-still-the-outer-loop/m-p/7225379
 
-        public static double MinU(Curve crv, Face face)
+        public static double MinU(Curve C, Face F)
         {
-            return crv.Tessellate()
-                .Select(p => face.Project(p))
+            return C.Tessellate()
+                .Select(p => F.Project(p))
                 .Min(ir => ir.UVPoint.U);
         }
 
-        public static double MinX(Curve crv, Transform transform)
+        public static double MinX(Curve C, Transform Tinv)
         {
-            return crv.Tessellate()
-                .Select(p => transform.OfPoint(p))
+            return C.Tessellate()
+                .Select(p => Tinv.OfPoint(p))
                 .Min(p => p.X);
         }
 
@@ -287,8 +285,7 @@ namespace BuildingCoder
                 foreach (Edge e in a)
                 {
                     var min = MinU(e.AsCurve(), F);
-                    if (min < uMin2)
-                        uMin2 = min;
+                    if (min < uMin2) uMin2 = min;
                 }
 
                 if (uMin2 < uMin)
@@ -321,8 +318,7 @@ namespace BuildingCoder
                 foreach (Edge e in a)
                 {
                     var min = MinX(e.AsCurve(), Tinv);
-                    if (min < uMin2)
-                        uMin2 = min;
+                    if (min < uMin2) uMin2 = min;
                 }
 
                 if (uMin2 < uMin)

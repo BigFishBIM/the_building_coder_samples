@@ -31,6 +31,7 @@ using View = Autodesk.Revit.DB.View;
 
 namespace BuildingCoder
 {
+
     #region Type filter versus anonymous method versus LINQ by Piotr Zurek
 
     //
@@ -1136,6 +1137,28 @@ namespace BuildingCoder
         }
 
         #endregion // Retrieve ducts and pipes intersecting wall
+
+        #region Retrieve fitting types with a specific part type
+
+        /// <summary>
+        ///     Retrieve all fitting types with a specific part type, cf.
+        ///     https://forums.autodesk.com/t5/revit-api-forum/enumerate-pipefittings-familysymbols-with-part-type-union-in-c/td-p/11248684
+        /// </summary>
+        IEnumerable<Element> GetFittingTypesOfPartType(
+            Document doc,
+            PartType parttype )
+        {
+            BuiltInParameter bip = BuiltInParameter.FAMILY_CONTENT_PART_TYPE;
+
+            return new FilteredElementCollector(doc)
+                .WhereElementIsElementType()
+                .OfCategory(BuiltInCategory.OST_PipeFitting)
+                .OfClass(typeof(FamilySymbol))
+                .Cast<FamilySymbol>()
+                .Where(f => f.Family.get_Parameter(bip)?.AsInteger() == (int) parttype);
+        }
+
+        #endregion // Retrieve fitting types with a specific part type
 
         #region Retrieve pipes belonging to specific system type
 
@@ -2612,12 +2635,19 @@ namespace BuildingCoder
             Document doc,
             string familySymbolName)
         {
+            //return GetStructuralColumnSymbolCollector(doc)
+            //    .WherePasses(
+            //        new ElementParameterFilter(
+            //            ParameterFilterRuleFactory.CreateEqualsRule(
+            //                new ElementId(BuiltInParameter.SYMBOL_NAME_PARAM),
+            //                familySymbolName, true))); // 2022
+
             return GetStructuralColumnSymbolCollector(doc)
                 .WherePasses(
                     new ElementParameterFilter(
                         ParameterFilterRuleFactory.CreateEqualsRule(
                             new ElementId(BuiltInParameter.SYMBOL_NAME_PARAM),
-                            familySymbolName, true)));
+                            familySymbolName))); // 2023
         }
 
         #endregion // Retrieve named family symbols using either LINQ or a parameter filter
@@ -2902,7 +2932,6 @@ TaskDialog.Show( "Revit", collector.Count() +
                 return Result.Succeeded;
             }
         }
-
         private void F3(Document doc)
         {
             var collector

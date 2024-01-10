@@ -60,7 +60,8 @@ namespace BuildingCoder
 
             var opt = app.Application.Create.NewGeometryOptions();
 
-            var polygons = GetFloorBoundaryPolygons(floors, opt);
+            var polygons
+                = GetFloorBoundaryPolygons(floors, opt);
 
             var n = polygons.Count;
 
@@ -169,8 +170,7 @@ namespace BuildingCoder
                 foreach (var obj in geo) // 2013
                 {
                     var solid = obj as Solid;
-                    if (solid != null)
-                        GetBoundary(polygons, solid);
+                    if (solid != null) GetBoundary(polygons, solid);
                 }
             }
 
