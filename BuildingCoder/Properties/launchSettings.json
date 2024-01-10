@@ -1,9 +1,9 @@
 {
   "profiles": {
     "BuildingCoder": {
-      "commandName": "Executable",
-      "executablePath": "C:\\Program Files\\Autodesk\\Revit 2023\\Revit.exe",
-      "commandLineArgs": "C:\\Users\\fanta\\Desktop\\rac_basic_sample_project.rvt"
+        "commandName": "Executable",
+        "executablePath": "C:\\Program Files\\Autodesk\\Revit 2023\\Revit.exe",
+        "commandLineArgs": "C:\\Program Files\\Autodesk\\Revit 2023\\Samples\\rac_basic_sample_project.rvt"
     }
   }
 }
